@@ -6,9 +6,8 @@ on:
       - main
 
 permissions:
-  contents: read   # Allows reading repository contents
-  packages: write  # Allows pushing packages (images) to GHCR
-  packages: read   # Allows pulling packages (images) from GHCR
+  contents: read     # Allows reading repository contents
+  packages: write   # Allows both pushing and pulling packages (images) to GHCR
 
 env:
   REGISTRY: ghcr.io
