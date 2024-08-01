@@ -11,7 +11,6 @@
 # * SPDX-License-Identifier: Apache-2.0
 # ********************************************************************************/
 
-
 FROM nodered/node-red
 # FROM nodered/node-red:latest-debian
 
