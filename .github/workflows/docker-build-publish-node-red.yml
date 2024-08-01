@@ -1,12 +1,9 @@
-name: Node-RED
+name: Build and Publish Docker Image
 
 on:
-  workflow_dispatch:
-  workflow_call:
-  pull_request:
-    paths:
-      - ".github/workflows/docker-build-publish-node-red.yml"
-      - "node-red/**"
+  push:
+    branches:
+      - main
 
 env:
   REGISTRY: ghcr.io
@@ -14,7 +11,7 @@ env:
 
 jobs:
   build:
-    name: "Build multi-arch image"
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -30,8 +27,8 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
-          username: __token__
-          password: ${{ secrets.GITHUB_TOKEN }} # Or your PAT if using one
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract Docker metadata
         id: meta
