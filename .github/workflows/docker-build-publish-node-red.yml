@@ -1,4 +1,4 @@
-name: Build and Publish Docker Image
+name: Build, Publish, and Verify Docker Image
 
 on:
   push:
@@ -6,8 +6,9 @@ on:
       - main
 
 permissions:
-  contents: read
-  packages: write
+  contents: read   # Allows reading repository contents
+  packages: write  # Allows pushing packages (images) to GHCR
+  packages: read   # Allows pulling packages (images) from GHCR
 
 env:
   REGISTRY: ghcr.io
@@ -15,8 +16,9 @@ env:
 
 jobs:
   build:
-    name: Build and Push Docker Image
+    name: Build, Push, and Verify Docker Image
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -38,7 +40,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ github.repository }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Build and push Docker image
         id: build-and-push
@@ -52,3 +54,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Verify Docker Image
+        run: |
+          docker pull ghcr.io/${{ github.repository }}/leda-example-node-red:latest
+          docker images
